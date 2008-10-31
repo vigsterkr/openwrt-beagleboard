@@ -7,7 +7,27 @@ config GCC_VERSION
 	default "4.2.2"     if GCC_VERSION_4_2_2
 	default "4.2.3"     if GCC_VERSION_4_2_3
 	default "4.2.4"     if GCC_VERSION_4_2_4
+	default "4.3.0"     if GCC_VERSION_4_3_0
+	default "4.3.1"     if GCC_VERSION_4_3_1
+	default "4.3.2"     if GCC_VERSION_4_3_2
 	default "4.1.2"
+
+config GCC_VERSION_3_4_X
+       bool
+       default y if GCC_VERSION_3_4_6
+
+config GCC_VERSION_4_1_X
+       bool
+       default y if GCC_VERSION_4_1_2
+
+config GCC_VERSION_4_2_X
+       bool
+       default y if GCC_VERSION_4_2_0 || GCC_VERSION_4_2_1 || GCC_VERSION_4_2_2 || GCC_VERSION_4_2_3 || GCC_VERSION_4_2_4
+
+config GCC_VERSION_4_3_X
+       bool
+       default y if GCC_VERSION_4_3_0 || GCC_VERSION_4_3_1 || GCC_VERSION_4_3_2
+
 
 if !TOOLCHAINOPTS
 	config GCC_VERSION_3_4_6
@@ -18,6 +38,9 @@ if !TOOLCHAINOPTS
 
 	config GCC_VERSION_4_2_3
 		default y if TARGET_avr32
+		
+	config GCC_VERSION_4_3_2
+		default y if TARGET_beagle 
 endif
 
 

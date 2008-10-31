@@ -5,6 +5,7 @@ choice
 	default GCC_VERSION_3_4_6 if LINUX_2_4
 	default GCC_VERSION_4_2_0 if TARGET_magicbox
 	default GCC_VERSION_4_2_3 if TARGET_avr32
+	default GCC_VERSION_4_3_2 if TARGET_beagle 
 	default GCC_VERSION_4_1_2
 	help
 	  Select the version of gcc you wish to use.
@@ -36,6 +37,17 @@ choice
 		depends !LINUX_2_4
 		bool "gcc 4.2.4"
 
+	config GCC_VERSION_4_3_0
+		depends !LINUX_2_4
+		bool "gcc 4.3.0"
+
+	config GCC_VERSION_4_3_1
+		depends !LINUX_2_4
+		bool "gcc 4.3.1"
+
+	config GCC_VERSION_4_3_2
+		depends !LINUX_2_4
+		bool "gcc 4.3.2"
 endchoice
 
 config EABI_SUPPORT

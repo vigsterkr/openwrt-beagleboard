@@ -9,7 +9,7 @@
 curdir:=toolchain
 
 # subdirectories to descend into
-$(curdir)/builddirs := kernel-headers $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_NATIVE_TOOLCHAIN),,binutils gcc uClibc)
+$(curdir)/builddirs := kernel-headers $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_NATIVE_TOOLCHAIN),,binutils gcc uClibc) $(if $(CONFIG_GCC_VERSION_4_3_1),gmp mpfr,)
 $(curdir)/builddirs-compile:=. $(filter-out kernel-headers,$($(curdir)/builddirs))
 $(curdir)/builddirs-install:=$($(curdir)/builddirs-compile)
 
@@ -17,7 +17,13 @@ $(curdir)/builddirs-install:=$($(curdir)/builddirs-compile)
 $(curdir)/uClibc/prepare:=$(curdir)/kernel-headers/prepare
 ifeq ($(CONFIG_NATIVE_TOOLCHAIN),)
   $(curdir)/binutils/prepare:=$(curdir)/uClibc/prepare
+ifeq ($(CONFIG_GCC_VERSION_4_3_1),)
   $(curdir)/gcc/prepare:=$(curdir)/binutils/install
+else
+  $(curdir)/gmp/prepare:=$(curdir)/binutils/install
+  $(curdir)/mpfr/prepare:=$(curdir)/gmp/install
+  $(curdir)/gcc/prepare:=$(curdir)/mpfr/install
+endif
   $(curdir)/uClibc/compile:=$(curdir)/gcc/compile
   $(curdir)/gcc/install:=$(curdir)/uClibc/compile
   $(curdir)/uClibc/install:=$(curdir)/gcc/install

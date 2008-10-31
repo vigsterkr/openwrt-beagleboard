@@ -49,6 +49,12 @@ endif
 
 EXTRA_TARGET=$(if $(CONFIG_EXTRA_TARGET_ARCH),--enable-biarch --enable-targets=$(call qstrip,$(CONFIG_EXTRA_TARGET_ARCH_NAME))-linux-uclibc)
 
+ifeq ($(CONFIG_GCC_VERSION_4_3_X),)
+WITH_GMP_MPFR:=
+else
+WITH_GMP_MPFR:=--with-mpfr=$(TOPDIR)/staging_dir/host --with-gmp=$(TOPDIR)/staging_dir/host
+endif
+
 define Stage1/Configure
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
 	$(SED) 's,GCC_VERSION=.*,GCC_VERSION=$(PKG_VERSION),' $(TOOLCHAIN_DIR)/info.mk
@@ -72,15 +78,30 @@ define Stage1/Configure
 		$(SSP) \
 		$(EXTRA_TARGET) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
+		$(WITH_GMP_MPFR) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
 	);
 endef
-define Stage1/Compile
+
+ifeq ($(CONFIG_GCC_VERSION_4_3_X),)
+ define Stage1/Compile
 	export SHELL="$(BASH)"; $(MAKE) -C $(BUILD_DIR1) all-gcc
-endef
-define Stage1/Install
+ endef
+else
+ define Stage1/Compile
+	export SHELL="$(BASH)"; $(MAKE) -C $(BUILD_DIR1) all-gcc all-target-libgcc
+ endef
+endif
+
+ifeq ($(CONFIG_GCC_VERSION_4_3_X),)
+ define Stage1/Install
 	export SHELL="$(BASH)"; $(MAKE) -C $(BUILD_DIR1) install-gcc
-endef
+ endef
+else
+ define Stage1/Install
+	export SHELL="$(BASH)"; $(MAKE) -C $(BUILD_DIR1) install-gcc install-target-libgcc
+ endef
+endif
 
 define Stage2/Configure
 	mkdir -p $(BUILD_DIR2) $(TOOLCHAIN_DIR)/$(REAL_GNU_TARGET_NAME)
@@ -107,6 +128,7 @@ define Stage2/Configure
 		$(SSP) \
 		$(EXTRA_TARGET) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
+		$(WITH_GMP_MPFR) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
 	);
 endef

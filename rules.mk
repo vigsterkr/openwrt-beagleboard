@@ -86,6 +86,7 @@ endif
 export PATH:=$(TARGET_PATH)
 export STAGING_DIR
 export GCC_HONOUR_COPTS:=0
+export LD_LIBRARY_PATH:=$(TOPDIR)/staging_dir/host/lib:$(LD_LIBRARY_PATH)
 
 PKG_CONFIG:=$(STAGING_DIR_HOST)/bin/pkg-config
 
