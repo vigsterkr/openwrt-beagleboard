@@ -1,0 +1,13 @@
+--- libdspbridge/Makefile.orig	2008-10-30 14:56:01.000000000 +0100
++++ libdspbridge/Makefile	2008-10-30 14:56:18.000000000 +0100
+@@ -34,8 +34,8 @@
+ 	find . -name "*.o" | xargs rm -rf
+ 
+ install: $(libraries)
+-	mkdir -p $(DESTDIR)/lib
+-	install $(libraries) $(DESTDIR)/lib
++	mkdir -p $(DESTDIR)/usr/lib
++	install $(libraries) $(DESTDIR)/usr/lib
+ 
+ # from Lauri Leukkunen's build system
+ ifdef V
