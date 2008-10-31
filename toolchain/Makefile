@@ -17,7 +17,7 @@ $(curdir)/builddirs-install:=$($(curdir)/builddirs-compile)
 $(curdir)/uClibc/prepare:=$(curdir)/kernel-headers/prepare
 ifeq ($(CONFIG_NATIVE_TOOLCHAIN),)
   $(curdir)/binutils/prepare:=$(curdir)/uClibc/prepare
-ifeq ($(CONFIG_GCC_VERSION_4_3_1),)
+ifeq ($(CONFIG_GCC_VERSION_4_3_X),)
   $(curdir)/gcc/prepare:=$(curdir)/binutils/install
 else
   $(curdir)/gmp/prepare:=$(curdir)/binutils/install
