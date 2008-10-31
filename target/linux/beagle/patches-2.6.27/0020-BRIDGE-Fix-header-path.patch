@@ -1,0 +1,75 @@
+From d0fd4b80b1b8d149637cdd0eb06079fcb27b88f8 Mon Sep 17 00:00:00 2001
+From: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+Date: Wed, 10 Sep 2008 03:12:34 +0300
+Subject: [PATCH] BRIDGE: Fix header path
+
+sed -i -e 's@asm/arch/@mach/@g' \
+    drivers/dsp/bridge/*/*.[ch] \
+    arch/arm/plat-omap/include/bridge/*.h
+
+Signed-off-by: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+---
+ drivers/dsp/bridge/rmgr/drv_interface.c |    4 ++--
+ drivers/dsp/bridge/rmgr/node.c          |    2 +-
+ drivers/dsp/bridge/rmgr/proc.c          |    2 +-
+ drivers/dsp/bridge/wmd/io_sm.c          |    2 +-
+ drivers/dsp/bridge/wmd/tiomap_sm.c      |    2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+--- a/drivers/dsp/bridge/rmgr/drv_interface.c
++++ b/drivers/dsp/bridge/rmgr/drv_interface.c
+@@ -63,8 +63,8 @@
+ #ifndef CONFIG_OMAP3_PM
+ #include <mach/omap-pm.h>
+ #else
+-#include <asm/arch/resource.h>
+-#include <asm/arch/prcm_34xx.h>
++#include <mach/resource.h>
++#include <mach/prcm_34xx.h>
+ #endif
+ #endif
+ #endif
+--- a/drivers/dsp/bridge/rmgr/node.c
++++ b/drivers/dsp/bridge/rmgr/node.c
+@@ -159,7 +159,7 @@
+ #include <mach/omap-pm.h>
+ #include <mach/board-3430sdp.h>
+ #else
+-#include <asm/arch/resource.h>
++#include <mach/resource.h>
+ #endif
+ #endif
+ #endif
+--- a/drivers/dsp/bridge/rmgr/proc.c
++++ b/drivers/dsp/bridge/rmgr/proc.c
+@@ -155,7 +155,7 @@
+ #include <mach/omap-pm.h>
+ #include <mach/board-3430sdp.h>
+ #else
+-#include <asm/arch/resource.h>
++#include <mach/resource.h>
+ #endif
+ #endif
+ #endif
+--- a/drivers/dsp/bridge/wmd/io_sm.c
++++ b/drivers/dsp/bridge/wmd/io_sm.c
+@@ -116,7 +116,7 @@
+ #ifndef CONFIG_OMAP3_PM
+ #include <mach/omap-pm.h>
+ #else
+-#include <asm/arch/resource.h>
++#include <mach/resource.h>
+ #endif
+ #endif
+ #endif
+--- a/drivers/dsp/bridge/wmd/tiomap_sm.c
++++ b/drivers/dsp/bridge/wmd/tiomap_sm.c
+@@ -72,7 +72,7 @@
+ #ifndef CONFIG_OMAP3_PM
+ #include <mach/omap-pm.h>
+ #else
+-#include <asm/arch/resource.h>
++#include <mach/resource.h>
+ extern struct constraint_handle *dsp_constraint_handle;
+ #endif
+ #endif

@@ -1,0 +1,46 @@
+From 53707ce2591b5e4de257ed65bde44ff8b6818c16 Mon Sep 17 00:00:00 2001
+From: Ramesh Gupta <grgupta@ti.com>
+Date: Thu, 4 Sep 2008 00:31:04 -0500
+Subject: [PATCH] BRIDGE: OMAP PM Bug softlockup fix
+
+Fix BUG# soft lockup issue with the Open Source
+Power Management.
+
+Signed-off-by: Ramesh Gupta <grgupta@ti.com>
+Signed-off-by: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+---
+ drivers/dsp/bridge/wmd/tiomap3430.c |    9 ++-------
+ 1 files changed, 2 insertions(+), 7 deletions(-)
+
+--- a/drivers/dsp/bridge/wmd/tiomap3430.c
++++ b/drivers/dsp/bridge/wmd/tiomap3430.c
+@@ -281,8 +281,6 @@ static DSP_STATUS WMD_BRD_Monitor(struct
+     if ((temp & 0x03) != 0x03 || (temp & 0x03) != 0x02) {
+ 		/* IVA2 is not in ON state */
+ 		/* Read and set PM_PWSTCTRL_IVA2  to ON */
+-		HW_PWR_IVA2StateGet(resources.dwPrmBase, HW_PWR_DOMAIN_DSP,
+-				     &pwrState);
+ 		HW_PWR_IVA2PowerStateSet(resources.dwPrmBase,
+ 					  HW_PWR_DOMAIN_DSP,
+ 					  HW_PWR_STATE_ON);
+@@ -753,9 +751,7 @@ static DSP_STATUS WMD_BRD_Stop(struct WM
+ 				 "for iva2_fck\n");
+ 			}
+ 		/* IVA2 is not in OFF state */
+-		/* Read and set PM_PWSTCTRL_IVA2  to OFF */
+-		HW_PWR_IVA2StateGet(resources.dwPrmBase, HW_PWR_DOMAIN_DSP,
+-				     &pwrState);
++		/* Set PM_PWSTCTRL_IVA2  to OFF */
+ 		HW_PWR_IVA2PowerStateSet(resources.dwPrmBase,
+ 					  HW_PWR_DOMAIN_DSP,
+ 					  HW_PWR_STATE_OFF);
+@@ -2054,8 +2050,7 @@ static DSP_STATUS run_IdleBoot(u32 prm_b
+ 	HW_PWRST_IVA2RegGet(prm_base, &temp);
+ 	 if ((temp & 0x03) != 0x03 || (temp & 0x03) != 0x02) {
+ 		/* IVA2 is not in ON state */
+-		/* Read and set PM_PWSTCTRL_IVA2  to ON */
+-		HW_PWR_IVA2StateGet(prm_base, HW_PWR_DOMAIN_DSP, &pwrState);
++		/* Set PM_PWSTCTRL_IVA2  to ON */
+ 		HW_PWR_IVA2PowerStateSet(prm_base, HW_PWR_DOMAIN_DSP,
+ 					  HW_PWR_STATE_ON);
+ 		/* Set the SW supervised state transition */

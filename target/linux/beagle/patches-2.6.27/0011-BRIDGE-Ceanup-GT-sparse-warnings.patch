@@ -1,0 +1,91 @@
+From 090224f2f5cb06a329c26a9a63cf867d79632b24 Mon Sep 17 00:00:00 2001
+From: Omar Ramirez Luna <x00omar@ti.com>
+Date: Mon, 18 Aug 2008 12:16:30 +0300
+Subject: [PATCH] BRIDGE: Ceanup GT sparse warnings
+
+Signed-off-by: Omar Ramirez Luna <x00omar@ti.com>
+Acked-by: Hari Kanigeri <h-kanigeri2@ti.com>
+Signed-off-by: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+---
+ arch/arm/plat-omap/include/bridge/dbc.h |    2 +-
+ arch/arm/plat-omap/include/bridge/gt.h  |    2 +-
+ drivers/dsp/bridge/gen/_gt_para.c       |    4 ++--
+ drivers/dsp/bridge/gen/gt.c             |    8 ++++----
+ drivers/dsp/bridge/services/dbg.c       |    2 +-
+ 5 files changed, 9 insertions(+), 9 deletions(-)
+
+--- a/arch/arm/plat-omap/include/bridge/dbc.h
++++ b/arch/arm/plat-omap/include/bridge/dbc.h
+@@ -50,7 +50,7 @@
+ 
+ #define DBC_Assert(exp) \
+     if (!(exp)) \
+-	(*GT->ERRORFXN)("%s, line %d: Assertion (" #exp ") failed.\n", \
++	printk("%s, line %d: Assertion (" #exp ") failed.\n", \
+ 	__FILE__, __LINE__)
+ #define DBC_Require DBC_Assert	/* Function Precondition.  */
+ #define DBC_Ensure  DBC_Assert	/* Function Postcondition. */
+--- a/arch/arm/plat-omap/include/bridge/gt.h
++++ b/arch/arm/plat-omap/include/bridge/gt.h
+@@ -241,7 +241,7 @@ extern struct GT_Config _GT_params;
+ 
+ #define GT_assert(mask, expr) \
+ 	(!(expr) ? \
+-	    (*GT->ERRORFXN)("assertion violation: %s, line %d\n", \
++	    printk("assertion violation: %s, line %d\n", \
+ 			    __FILE__, __LINE__), NULL : NULL)
+ 
+ #define GT_config(config)     (_GT_params = *(config))
+--- a/drivers/dsp/bridge/gen/_gt_para.c
++++ b/drivers/dsp/bridge/gen/_gt_para.c
+@@ -89,8 +89,8 @@ static void error(char *fmt, ...)
+ 
+ 	va_end(va);
+ 
+-	(*GT->PRINTFXN) ("ERROR: ");
+-	(*GT->PRINTFXN) (fmt, arg1, arg2, arg3, arg4, arg5, arg6);
++	printk("ERROR: ");
++	printk(fmt, arg1, arg2, arg3, arg4, arg5, arg6);
+ 
+ #if (defined DEBUG) || (defined DDSP_DEBUG_PRODUCT)
+ 	if (in_interrupt()) {
+--- a/drivers/dsp/bridge/gen/gt.c
++++ b/drivers/dsp/bridge/gen/gt.c
+@@ -238,14 +238,14 @@ s32 _GT_trace(struct GT_Mask *mask, char
+ 	va_end(va);
+ #ifdef DEBUG
+ 	if (GT->PIDFXN == NULL) {
+-		(*GT->PRINTFXN)(GT_1format, mask->modName, GT->TIDFXN ?
++		printk(GT_1format, mask->modName, GT->TIDFXN ?
+ 		(*GT->TIDFXN)() : 0);
+ 	} else {
+-		(*GT->PRINTFXN)(GT_2format, mask->modName, (*GT->PIDFXN)(),
++		printk(GT_2format, mask->modName, (*GT->PIDFXN)(),
+ 		GT->TIDFXN ? (*GT->TIDFXN)() : 0);
+ 	}
+ #endif
+-	(*GT->PRINTFXN)(format, arg1, arg2, arg3, arg4, arg5, arg6);
++	printk(format, arg1, arg2, arg3, arg4, arg5, arg6);
+ 
+ 	return 0;
+ }
+@@ -257,7 +257,7 @@ s32 _GT_trace(struct GT_Mask *mask, char
+  */
+ static void error(char *string)
+ {
+-	(*GT->PRINTFXN)("GT: %s", string);
++	printk("GT: %s", string);
+ }
+ 
+ /*
+--- a/drivers/dsp/bridge/services/dbg.c
++++ b/drivers/dsp/bridge/services/dbg.c
+@@ -101,7 +101,7 @@ DSP_STATUS DBG_Trace(u8 bLevel, char *ps
+ 	va_end(va);
+ 
+ 	if (bLevel & *(DBG_debugMask).flags)
+-		(*GT->PRINTFXN)(pstrFormat, arg1, arg2, arg3, arg4, arg5, arg6);
++		printk(pstrFormat, arg1, arg2, arg3, arg4, arg5, arg6);
+ 
+ 	return DSP_SOK;
+ }

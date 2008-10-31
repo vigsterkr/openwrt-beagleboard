@@ -594,6 +594,23 @@ endef
 
 $(eval $(call KernelPackage,mmc-atmelmci))
 
+define KernelPackage/mmc-omap-hs
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=TI OMAP High Speed Multimedia Card Interface support
+  DEPENDS:=@TARGET_beagle +kmod-mmc
+  KCONFIG:=CONFIG_MMC_OMAP_HS
+  FILES:=$(LINUX_DIR)/drivers/mmc/host/omap_hsmmc.$(LINUX_KMOD_SUFFIX)
+  AUTOLOAD:=$(call AutoLoad,90,omap_hsmmc)
+endef
+
+define KernelPackage/mmc-omap-hs/description
+ Kernel support for TI OMAP High Speed Multimedia Card Interface.
+endef
+
+$(eval $(call KernelPackage,mmc-omap-hs))
+
+
+
 define KernelPackage/spi-bitbang
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Serial Peripheral Interface bitbanging library
@@ -661,3 +678,28 @@ define KernelPackage/crypto-dev-ixp4xx/description
 endef
 
 $(eval $(call KernelPackage,crypto-dev-ixp4xx))
+
+#TODO: depends on beagleboard target since that's the
+# only target that contains the DSP bridge driver patch
+define KernelPackage/dsp-bridge
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=DSP Bridge driver
+  DEPENDS:=@TARGET_beagle
+  KCONFIG:= \
+  	CONFIG_MPU_BRIDGE \
+	CONFIG_DISABLE_BRIDGE_DVFS=y \
+	CONFIG_DISABLE_BRIDGE_PM=y \
+	CONFIG_BRIDGE_DEBUG=n
+  FILES:=$(LINUX_DIR)/drivers/dsp/bridge/bridgedriver.$(LINUX_KMOD_SUFFIX)
+endef
+
+define KernelPackage/dsp-bridge/description
+ DSP/BIOS Bridge is designed for platforms that contain a GPP and
+ one or more attached DSPs.  The GPP is considered the master or
+ "host" processor, and the attached DSPs are processing resources
+ that can be utilized by applications and drivers running on the GPP.
+endef
+
+$(eval $(call KernelPackage,dsp-bridge))
+
+

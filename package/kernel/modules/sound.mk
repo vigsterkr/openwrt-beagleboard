@@ -8,6 +8,11 @@
 
 SOUND_MENU:=Sound Support
 
+define snddep
+  SUBMENU:=$(SOUND_MENU)
+  DEPENDS:=kmod-sound-core $(1)
+endef
+
 define KernelPackage/sound-core
   SUBMENU:=$(SOUND_MENU)
   TITLE:=Sound support
@@ -103,3 +108,37 @@ define KernelPackage/sound-cs5535audio/description
 endef
 
 $(eval $(call KernelPackage,sound-cs5535audio))
+
+
+define KernelPackage/sound-alsa-soc
+  $(call snddep,)
+  TITLE:=ALSA for SoC audio
+  KCONFIG:=CONFIG_SND_SOC
+  FILES:=$(LINUX_DIR)/sound/soc/snd-soc-core.$(LINUX_KMOD_SUFFIX)
+  AUTOLOAD:=$(call AutoLoad,35, snd-soc-core)
+endef
+
+define KernelPackage/sound-alsa-soc/description
+ support for the integrated AC97 sound device on olpc
+endef
+
+$(eval $(call KernelPackage,sound-alsa-soc))
+
+define KernelPackage/sound-alsa-soc-omap-beagle
+  $(call snddep,kmod-sound-alsa-soc @TARGET_beagle)
+  TITLE:=SoC Audio support for OMAP3 Beagle
+  KCONFIG:=CONFIG_SND_OMAP_SOC_OMAP3_BEAGLE \
+	CONFIG_SND_OMAP_SOC \
+	CONFIG_SND_OMAP_SOC_MCBSP
+  FILES:=$(LINUX_DIR)/sound/soc/omap/snd-soc-omap3beagle.$(LINUX_KMOD_SUFFIX) \
+  	$(LINUX_DIR)/sound/soc/omap/snd-soc-omap.$(LINUX_KMOD_SUFFIX) \
+  	$(LINUX_DIR)/sound/soc/omap/snd-soc-omap-mcbsp.$(LINUX_KMOD_SUFFIX) \
+  	$(LINUX_DIR)/sound/soc/codecs/snd-soc-twl4030.$(LINUX_KMOD_SUFFIX)
+  AUTOLOAD:=$(call AutoLoad,40, snd-soc-omap snd-soc-twl4030 snd-soc-omap-mcbsp snd-soc-omap3beagle)
+endef
+
+define KernelPackage/sound-alsa-soc-omap-beagle/description
+ Say Y if you want to add support for SoC audio on the Beagleboard. 
+endef
+
+$(eval $(call KernelPackage,sound-alsa-soc-omap-beagle))
