@@ -9,7 +9,7 @@
 curdir:=toolchain
 
 # subdirectories to descend into
-$(curdir)/builddirs := kernel-headers $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_NATIVE_TOOLCHAIN),,binutils gcc uClibc) $(if $(CONFIG_GCC_VERSION_4_3_1),gmp mpfr,)
+$(curdir)/builddirs := kernel-headers $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_NATIVE_TOOLCHAIN),,binutils gcc uClibc) $(if $(CONFIG_GCC_VERSION_4_3_X),gmp mpfr,)
 $(curdir)/builddirs-compile:=. $(filter-out kernel-headers,$($(curdir)/builddirs))
 $(curdir)/builddirs-install:=$($(curdir)/builddirs-compile)
 
