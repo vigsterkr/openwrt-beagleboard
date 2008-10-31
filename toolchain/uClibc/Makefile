@@ -163,9 +163,14 @@ UCLIBC_MAKE := PATH=$(TARGET_PATH) $(MAKE) -C $(PKG_BUILD_DIR) \
 	CPU_CFLAGS="$(TARGET_CFLAGS)"
 
 define Build/Compile
+
+ifneq ($(CONFIG_GCC_VERSION_4_3_X),)
+	ln -sf $(TOOLCHAIN_DIR)/lib/gcc/$(ARCH)-linux-uclibc/$(CONFIG_GCC_VERSION)/include-fixed/limits.h \
+	$(TOOLCHAIN_DIR)/lib/gcc/$(ARCH)-linux-uclibc/$(CONFIG_GCC_VERSION)/include/limits.h
+endif
 	$(SED) 's,^CROSS=.*,CROSS=$(TARGET_CROSS),g' $(PKG_BUILD_DIR)/Rules.mak
-	$(UCLIBC_MAKE) PREFIX= all
-	$(UCLIBC_MAKE) PREFIX=$(STAGING_DIR_HOST)/ install_runtime install_dev
+	PATH=$(TARGET_PATH) $(UCLIBC_MAKE) PREFIX= all
+	PATH=$(TARGET_PATH) $(UCLIBC_MAKE) PREFIX=$(STAGING_DIR_HOST)/ install_runtime install_dev
 	$(SED) 's,UCLIBC_VERSION=.*,UCLIBC_VERSION=$(PKG_VERSION),' $(TOOLCHAIN_DIR)/info.mk
 	$(SED) 's,UCLIBC_PATCHVER=.*,UCLIBC_PATCHVER=$(PKG_EXTRAVERSION),' $(TOOLCHAIN_DIR)/info.mk
 	rm -rf $(TOOLCHAIN_DIR)/lib/libc.so
@@ -173,7 +178,7 @@ define Build/Compile
 endef
 
 define Build/Install
-	$(UCLIBC_MAKE) PREFIX= utils
+	PATH=$(TARGET_PATH) $(UCLIBC_MAKE) PREFIX= utils
 	$(INSTALL_DIR) $(TOOLCHAIN_DIR)/target-utils
 	$(INSTALL_BIN) \
 		$(PKG_BUILD_DIR)/utils/ldd \
