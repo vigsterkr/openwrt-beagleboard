@@ -165,8 +165,8 @@ UCLIBC_MAKE := PATH=$(TARGET_PATH) $(MAKE) -C $(PKG_BUILD_DIR) \
 define Build/Compile
 
 ifneq ($(CONFIG_GCC_VERSION_4_3_X),)
-	ln -sf $(TOOLCHAIN_DIR)/lib/gcc/$(ARCH)-linux-uclibc/$(CONFIG_GCC_VERSION)/include-fixed/limits.h \
-	$(TOOLCHAIN_DIR)/lib/gcc/$(ARCH)-linux-uclibc/$(CONFIG_GCC_VERSION)/include/limits.h
+	ln -sf $(TOOLCHAIN_DIR)/lib/gcc/$(REAL_GNU_TARGET_NAME)/$(CONFIG_GCC_VERSION)/include-fixed/limits.h \
+	$(TOOLCHAIN_DIR)/lib/gcc/$(REAL_GNU_TARGET_NAME)/$(CONFIG_GCC_VERSION)/include/limits.h
 endif
 	$(SED) 's,^CROSS=.*,CROSS=$(TARGET_CROSS),g' $(PKG_BUILD_DIR)/Rules.mak
 	PATH=$(TARGET_PATH) $(UCLIBC_MAKE) PREFIX= all
